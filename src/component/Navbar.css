@@ -1,4 +1,4 @@
-/* 네비게이션 바 스타일 */
+/* 네비게이션 바 */
 
 .navbar {
     background-color: #1e88e5;
@@ -12,7 +12,6 @@
 .navbar .logo {
     font-size: 20px;
     font-weight: bold;
-    color: white;
 }
 
 .navbar .menu a,
@@ -26,7 +25,7 @@
     margin-left: 16px;
 }
 
-.navbar .menu a,
+.navbar .menu a:hover,
 .navbar .menu button:hover {
     text-decoration: underline;
 }
