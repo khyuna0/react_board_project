@@ -1,11 +1,23 @@
 import { useState } from "react";
+import "./Signup.css"
+import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+import api from "../api/axiosConfig";
 
 function Signup () {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    const handleSignup = () => {
-
+    const handleSignup = async(e) => {
+        try {
+            await api.post("/api/auth/signup", {username, password})
+           alert("회원가입 성공!");
+           navigate("/login");
+        }catch (err) {
+            console.error("회원가입 실패 :", err )
+            alert("회원가입 실패");
+        }
     }
 
     return (
@@ -17,8 +29,8 @@ function Signup () {
 
                 <input type="password" placeholder="비밀번호" value={password} 
                 onChange={(e) => setPassword(e.target.value)}/>
+                <button type="submit">회원가입</button>
             </form>
-            <button type="submit">회원가입</button>
         </div>
     )
 }
