@@ -1,4 +1,4 @@
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Navbar from './component/Navbar';
 import Home from './pages/Home';
@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useEffect, useState } from 'react';
 import api from './api/axiosConfig';
+import axios from "axios";
 
 function App() {
 
