@@ -49,3 +49,12 @@ h2 {
     background-color: #1b77c7;
     color: white;
 }
+
+.click-title {
+    cursor: pointer;
+    /* font-weight: bold; */
+}
+
+.click-title:hover {
+    text-decoration: underline;
+}

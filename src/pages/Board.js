@@ -68,7 +68,9 @@ function Board ({ user }) {
                         .map((p, index) => (
                                 <tr key={p.id}>
                                     <td>{posts.length - index}</td> 
-                                    <td>{p.title}</td>
+                                    <td className="click-title" onClick={() => navigate(`/board/${p.id}`)}>
+                                        {p.title}
+                                    </td>
                                     <td>{p.author.username}</td>
                                     <td>{formatDate(p.createDate)}</td>
                                 </tr>
