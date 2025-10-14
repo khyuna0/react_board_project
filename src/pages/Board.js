@@ -10,13 +10,20 @@ function Board ({ user }) {
     // 게시판 모든 글 요청
 
     const[posts, setPosts] = useState([]);
+    const[loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const loadPosts = async () => {
         try{
+            setLoading(true);
             const res = await api.get("/api/board"); // 모든 글 가져오기 요청
             setPosts(res.data); // posts -> 전체 게시글
         } catch(err){
             console.error(err);
+            setError("게시글을 불러오는 데 실패했습니다.");
+            setPosts([]); // 게시글들의 배열을 다시 초기화
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -42,6 +49,8 @@ function Board ({ user }) {
     return (
         <div className="container">
             <h2>게시판</h2>
+            {loading && <p>게시판 글 리스트 로딩 중</p>}
+            {error && <p>{error}</p>}
             <table className="board-table">
                 <thead>
                     <tr>
