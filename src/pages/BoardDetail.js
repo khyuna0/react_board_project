@@ -36,6 +36,28 @@ function BoardDetail ({ user }) {
     // 로그인 상태이면서 로그인한 유저와 글을 쓴 유저가 동일할 때 T
     const isAuthor = user && user === post.author.username;
 
+    // 특정 id로 글 삭제
+    const handleDelete = async() => {
+        try{
+            if(window.confirm("정말 삭제하시겠습니까?")) { // 확인 T , 취소 F
+                await api.delete(`/api/board/${id}`);
+                alert("삭제 완료");
+                navigate("/board",{replace:true});
+            } else {
+                return
+            }
+        } catch (err) {
+            console.error(err);
+            if(err.response.status === 403) {
+                alert("해당 글에 대한 권한이 없습니다.");
+                navigate("/board",{replace:true});
+            } else {
+                alert("삭제할 글이 존재하지 않습니다.");
+                navigate("/board",{replace:true});
+            }
+        }
+    }
+
     return (
         <div className="detail-container">
             <h2 className="title">{post.title}</h2>
@@ -43,13 +65,13 @@ function BoardDetail ({ user }) {
             <div className="content">{post.content}</div>
             
             <div className="button-group">
-                <button onClick={() => navigate("/board")}>글목록</button>
+                <button onClick={() => navigate("/board")}>목록</button>
 
                 {/* 로그인 한 유저 본인이 쓴 글만 삭제 수정 가능 */}
                 { isAuthor&& (
                     <>
-                        <button>수정</button>
-                        <button>삭제</button>
+                        <button className="edit-button">수정</button>
+                        <button className="delete-button" onClick={handleDelete}>삭제</button>
                     </>
                 )}
 
