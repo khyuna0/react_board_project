@@ -16,6 +16,7 @@ function Login({ onLogin }) {
             //로그인 요청(폼 데이터 방식)
             await api.post("/api/auth/login", 
                 new URLSearchParams({username, password})
+                // 폼 데이터 전송 방식일때는 반드시 URLSearchParams 로 전송
             );
 
             //현재 로그인한 사용자 정보 가져오기
