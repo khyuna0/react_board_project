@@ -1,0 +1,35 @@
+.detail-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow:  0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 글제목 */
+.detail-container .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 작성자 */
+.detail-container .author {
+    font-size: 14px;
+    color: #575757;
+    margin-bottom: 20px;
+}
+
+/* 글 내용 */
+.detail-container .content {
+    min-height: 150px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+    line-height: 1.5;
+}

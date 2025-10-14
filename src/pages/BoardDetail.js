@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosConfig";
+import "./BoardDetail.css"
 
 function BoardDetail ({ user }) {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ function BoardDetail ({ user }) {
     return (
         <div className="detail-container">
             <h2 className="title">{post.title}</h2>
-            <p className="author">{post.author.username}</p>
+            <p className="author">글쓴이 : {post.author.username}</p>
             <div className="content">{post.content}</div>
             
             <div className="button-group">
