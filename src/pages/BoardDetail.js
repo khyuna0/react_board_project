@@ -36,6 +36,34 @@ function BoardDetail ({ user }) {
         loadPost();
     },[id]); // id 변경, 재로딩될때 실행
     
+    // 댓글 관련 이벤트 시작
+    const [newComment, setNewComment] = useState(""); // 새로운 댓글이 저장될 변수
+    const [comments, setComments] = useState([]);
+    const [editCommentContent, setEditCommentContent] = useState("");
+    const [editCommentId, setEditCommentId] = useState();
+
+    // 댓글 제출 함수
+    const handleCommentSubmit = () => {
+
+    }
+    // 댓글 삭제 함수
+    const handleCommentDelete = (commentId) => {
+
+    }
+    // 댓글 수정 함수
+    const handleCommentUpdate = () => {
+
+    }
+
+
+    //날짜 format 함수 (날짜, 시간 출력)
+    const formatDate = (dateString) => {
+        
+        return dateString.substring(0,10);
+    }
+    // 댓글 관련 이벤트 처리 끝
+
+
     if(loading) return <p>게시글 로딩 중...</p>;
     if(error) return <p style={{color:"red"}}>{error}</p>
     if(!post) return <p style={{color:"red"}}>해당 게시글이 존재하지 않습니다.</p>
@@ -116,14 +144,60 @@ function BoardDetail ({ user }) {
                         <button className="list-button" onClick={() => navigate("/board")}>목록</button>
 
                         {/* 로그인 한 유저 본인이 쓴 글만 삭제 수정 가능 */}
-                        { isAuthor&& (
+                        { user === c.author.username && (
                             <>
                                 <button className="edit-button" onClick={() => setEditing(true)}>수정</button>
-                                <button className="delete-button" onClick={handleDelete}>삭제</button>
+                                <button className="delete-button" onClick={handleCommentDelete(c.id)}>삭제</button>
                             </>
                         )}
                     
                     </div>
+                    
+                    {/* 댓글 영역 시작 */}
+                        <div className="comment-section">
+                            {/* 댓글 입력 폼 시작 */}
+                            <h3>댓글 쓰기</h3>
+                            <form onSubmit={handleCommentSubmit} className="comment-form">
+                                <textarea placeholder="댓글을 입력하세요." value={newComment} onChange={(e) => setNewComment(e.target.value)}></textarea>
+                                <button type="submit" className="comment-buttons">등록</button>
+                            </form>
+
+                            {/* 기존 댓글 리스트 */}
+                            <ul className="comment-list">
+                                {comments.map((c) => ( 
+                                <li key={c.id} className="comment-item">
+
+                                    <div className="comment-header">
+                                        <span className="commnet-author">
+                                            {c.author.username}
+                                        </span>
+                                        <span className="comment-date">
+                                            {formatDate(c.createDate)}
+                                        </span>
+                                    </div>
+
+                                    <div className="comment-content">
+                                        {c.content}
+                                    </div>
+
+                                    <div className="button-group">
+                                        <button className="list-button" onClick={() => navigate("/board")}>목록</button>
+
+                                        {/* 로그인 한 유저 본인이 쓴 글만 삭제 수정 가능 */}
+                                        {isCommentAuthor && (
+                                            <>
+                                                <button className="edit-button" onClick={() => handleCommentUpdate(c)}>수정</button>
+                                                <button className="delete-button" onClick={handleDelete}>삭제</button>
+                                            </>
+                                        )}
+                                    </div>
+
+                                </li>
+                                ))}
+                            </ul>
+                        </div>
+                    {/* 댓글 영역 끝 */}
+
                 </>
             )}
         </div>
