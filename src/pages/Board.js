@@ -1,56 +1,76 @@
-import "./Board.css"
 import { useEffect, useState } from "react";
+import "./Board.css";
 import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 
-function Board ({ user }) {
+function Board({ user }) {
 
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalItems, setTotalItems] = useState(0);
     const navigate = useNavigate();
 
-    // 게시판 모든 글 요청
-
-    const[posts, setPosts] = useState([]);
-    const[loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const loadPosts = async () => {
-        try{
+    //게시판 페이징된 글 리스트 요청
+    const loadPosts = async (page = 0) => {
+        try {
             setLoading(true);
-            const res = await api.get("/api/board"); // 모든 글 가져오기 요청
-            setPosts(res.data); // posts -> 전체 게시글
-        } catch(err){
+            const res = await api.get(`/api/board?page=${page}&size=10`); //모든 게시글 가져오기 요청
+            setPosts(res.data.posts); //posts->전체 게시글->게시글의 배열
+            setCurrentPage(res.data.currentPage); //현재 페이지 번호
+            setTotalPages(res.data.totalPages); //전체 페이지 수
+            setTotalItems(res.data.setTotalItems); //모든 글의 갯수
+
+        } catch(err) {
             console.error(err);
-            setError("게시글을 불러오는 데 실패했습니다.");
-            setPosts([]); // 게시글들의 배열을 다시 초기화
+            setError("게시글을 불러오는 데 실패하였습니다.");
+            setPosts([]); //게시글들의 배열을 다시 초기화
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        loadPosts();
-    },[]);
-
-    // 날짜 포맷 함수
-    const formatDate = (dateString) =>{
-        return dateString.substring(0, 10);
-    }
-
-    // 글쓰기 버튼
     const handleWrite = () => {
-        // 로그인한 유저만 글쓰기 허용
-        if(!user) { // T -> 로그인하지 않은 경우
+        //로그인한 유저만 글쓰기 허용
+        if(!user) { //참이면 로그인하지 않은 경우
             alert("로그인 후 글 작성 가능합니다.");
             return;
+        } 
+        navigate("/board/write");
+    };
+
+    useEffect(() => {
+        loadPosts(currentPage);
+    },[currentPage]);
+
+    //페이지 번호 그룹 배열 반환 함수(10개까지만 표시)
+    //ex) 총 페이지 수 : 157 -> 총 16 페이지 필요 -> [0 1 2 3 4 5 6 7 8 9]
+    // ▶ -> [10 11 12 13 14 15]
+    const getPageNumbers = () => {
+        const startPage = Math.floor(currentPage / 10) * 10; 
+        const endPage = (startPage + 10) > totalPages ? totalPages : (startPage + 10);
+        // 마지막 페이지 번호가 계산된 endpage 값보다 작을 경우 마지막 페이지를 
+        // endpage 값으로 변경하여 마지막 페이지까지만 페이지 그룹 출력되도록 수정 
+        const pages = [];
+        for (let i = startPage; i < endPage; i++) {
+            pages.push(i);
         }
-        navigate("/board/write")
+        return pages;
+    };
+
+    //날짜 format 함수
+    const formatDate = (dateString) => {
+        
+        return dateString.substring(0,10);
     }
 
     return (
         <div className="container">
             <h2>게시판</h2>
-            {loading && <p>게시판 글 리스트 로딩 중</p>}
-            {error && <p>{error}</p>}
+            {loading && <p>게시판 글 리스트 로딩 중...</p>}
+            {error && <p style={{color:"red"}}>{error}</p>}
             <table className="board-table">
                 <thead>
                     <tr>
@@ -61,27 +81,41 @@ function Board ({ user }) {
                     </tr>
                 </thead>
                 <tbody>
-                    { posts.length > 0 ? ( 
+                    { posts.length > 0 ? (
                         posts
-                        .slice() // 얕은 복사
-                        .reverse() // 최신 글 위로
+                        .slice() //얕은 복사
+                        .reverse()
                         .map((p, index) => (
-                                <tr key={p.id}>
-                                    <td>{posts.length - index}</td> 
-                                    <td className="click-title" onClick={() => navigate(`/board/${p.id}`)}>
-                                        {p.title}
-                                    </td>
-                                    <td>{p.author.username}</td>
-                                    <td>{formatDate(p.createDate)}</td>
-                                </tr>
-                            ))    
-                    ):( 
-                        <tr>
-                            <td colSpan="4">게시물이 없습니다.</td>
+                        <tr key={p.id}>
+                            <td>{posts.length - index}</td>
+                            <td className="click-title" onClick={()=>navigate(`/board/${p.id}`)}>
+                                {p.title}
+                            </td>
+                            <td>{p.author.username}</td>
+                            <td>{formatDate(p.createDate)}</td>
                         </tr>
-                    )}       
+                        ))
+                    ):(
+                        <tr>
+                            <td colSpan="4">
+                            게시물이 없습니다.
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
+            {/* 페이지 번호와 이동 화살표 출력 */}
+            <div className="pagination">
+                <button>◀</button>
+                {getPageNumbers().map((num)=>(
+                    <button key={num} onClick={() => setCurrentPage(num)}>
+                        {num + 1}
+                    </button>
+                  )
+                )}
+                <button>▶</button>
+            </div>
+            
             <div className="write-button-container">
                 <button onClick={handleWrite} 
                 className="write-button">글쓰기</button>

@@ -35,6 +35,7 @@ function Signup () {
                 onChange={(e) => setUsername(e.target.value)} />
                 <p><input type="password" placeholder="비밀번호" value={password} 
                 onChange={(e) => setPassword(e.target.value)}/></p>
+                
                 {errors.username && <p style={{color:"red"}}>{errors.username}</p>}
                 {errors.password && <p style={{color:"red"}}>{errors.password}</p>}
                 <button type="submit">회원가입</button>
