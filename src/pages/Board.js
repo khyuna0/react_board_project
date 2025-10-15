@@ -8,9 +8,9 @@ function Board({ user }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
-    const [totalItems, setTotalItems] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+    const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+    const [totalItems, setTotalItems] = useState(0); // 모든 글의 개수
     const navigate = useNavigate();
 
     //게시판 페이징된 글 리스트 요청
@@ -21,7 +21,7 @@ function Board({ user }) {
             setPosts(res.data.posts); //posts->전체 게시글->게시글의 배열
             setCurrentPage(res.data.currentPage); //현재 페이지 번호
             setTotalPages(res.data.totalPages); //전체 페이지 수
-            setTotalItems(res.data.setTotalItems); //모든 글의 갯수
+            setTotalItems(res.data.totalItems); //모든 글의 갯수
 
         } catch(err) {
             console.error(err);
@@ -86,7 +86,7 @@ function Board({ user }) {
                         .slice() //얕은 복사
                         .map((p, index) => (
                         <tr key={p.id}>
-                            <td>{posts.length - index}</td>
+                            <td>{totalItems - (index + (10 *currentPage) )}</td>
                             <td className="click-title" onClick={()=>navigate(`/board/${p.id}`)}>
                                 {p.title}
                             </td>
