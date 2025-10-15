@@ -84,7 +84,6 @@ function Board({ user }) {
                     { posts.length > 0 ? (
                         posts
                         .slice() //얕은 복사
-                        .reverse()
                         .map((p, index) => (
                         <tr key={p.id}>
                             <td>{posts.length - index}</td>
@@ -106,14 +105,14 @@ function Board({ user }) {
             </table>
             {/* 페이지 번호와 이동 화살표 출력 */}
             <div className="pagination">
-                <button>◀</button>
+                <button onClick={() => setCurrentPage(currentPage - 1 ) } disabled={currentPage === 0}>◀</button>
                 {getPageNumbers().map((num)=>(
                     <button key={num} onClick={() => setCurrentPage(num)}>
                         {num + 1}
                     </button>
                   )
                 )}
-                <button>▶</button>
+                <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === (totalPages - 1) || totalPages === 0} >▶</button>
             </div>
             
             <div className="write-button-container">
