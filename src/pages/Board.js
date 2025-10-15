@@ -105,14 +105,21 @@ function Board({ user }) {
             </table>
             {/* 페이지 번호와 이동 화살표 출력 */}
             <div className="pagination">
+                {/* 첫 번째 페이지로 */}
+                <button onClick={() => setCurrentPage(0) } disabled={currentPage === 0}>◀◀</button>
+                {/* 다음 */}
                 <button onClick={() => setCurrentPage(currentPage - 1 ) } disabled={currentPage === 0}>◀</button>
+                {/* 페이지 번호 그룹 10개씩 출력 기능 */}
                 {getPageNumbers().map((num)=>(
-                    <button key={num} onClick={() => setCurrentPage(num)}>
+                    <button className={num === currentPage ? "active" : ""} key={num} onClick={() => setCurrentPage(num)}>
                         {num + 1}
                     </button>
                   )
                 )}
+                {/* 이전 */}
                 <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === (totalPages - 1) || totalPages === 0} >▶</button>
+                {/* 마지막 페이지로 */}
+                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === (totalPages - 1) || totalPages === 0} >▶▶</button>
             </div>
             
             <div className="write-button-container">
