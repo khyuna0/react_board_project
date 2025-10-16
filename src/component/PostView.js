@@ -1,4 +1,8 @@
-function PostView({ user, post, OnEdit, OnDelete }) {
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axiosConfig";
+
+function PostView({ user, post, setEditing }) {
   //  글 보기 컴포넌트
 
   const navigate = useNavigate();
@@ -27,8 +31,10 @@ function PostView({ user, post, OnEdit, OnDelete }) {
 
   useEffect(() => {
     loadPost(); //게시글 다시 불러오기
-    loadComments(); //게시글에 달린 댓글 리스트 다시 불러오기
   }, [id]);
+
+  // 권한 확인
+  const isAuthor = user && user === post?.author?.username;
 
   //글삭제
   const handleDelete = async () => {
@@ -36,7 +42,7 @@ function PostView({ user, post, OnEdit, OnDelete }) {
       return;
     }
     try {
-      await api.delete(`/api/board/${id}`);
+      await api.delete(`/api/board/${post.id}`);
       alert("게시글 삭제 성공!");
       navigate("/board");
     } catch (err) {

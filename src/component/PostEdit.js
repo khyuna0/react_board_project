@@ -1,11 +1,9 @@
-function PostEdit({ post, setEditing, setPost }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+import { useState } from "react";
+import api from "../api/axiosConfig";
 
-  const setPost = () => {
-    setTitle(post.title);
-    setContent(post.content);
-  };
+function PostEdit({ post, setEditing, setPost }) {
+  const [title, setTitle] = useState(post.title);
+  const [content, setContent] = useState(post.content);
 
   const handleUpdate = async () => {
     if (!window.confirm("정말 수정하시겠습니까?")) {
@@ -13,7 +11,7 @@ function PostEdit({ post, setEditing, setPost }) {
       return;
     }
     try {
-      const res = await api.put(`/api/board/${id}`, { title, content });
+      const res = await api.put(`/api/board/${post.id}`, { title, content });
       alert("게시글이 수정되었습니다.");
       setPost(res.data); //새로 수정된 글로 post 변수 값 변경
       setEditing(false); //상세보기 화면으로 전환
