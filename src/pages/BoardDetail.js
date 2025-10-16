@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axiosConfig";
 import "./BoardDetail.css"
 
-function BoardDetail ({ user }) {
+function BoardDetail ({ user }) { // user - 현재 로그인한 사용자의 username
     const navigate = useNavigate();
   
     const [post, setPost] = useState(null); // 해당 글 아이디로 요청한 글 객체
@@ -50,9 +50,13 @@ function BoardDetail ({ user }) {
     const handleCommentDelete = (commentId) => {
 
     }
-    // 댓글 수정 함수
-    const handleCommentUpdate = () => {
+    // 댓글 수정 함수 -> 백엔드 수정 요청
+    const handleCommentUpdate = (commentId) => {
 
+    }
+    // 댓글 수정 여부 확인
+    const handleCommentEdit = (comment) => {
+        setEditCommentId(comment.id);
     }
 
 
@@ -175,26 +179,42 @@ function BoardDetail ({ user }) {
                                             {formatDate(c.createDate)}
                                         </span>
                                     </div>
+                                { editCommentId === c.id ? (            
+                                    // {/* 댓글 수정 섹션 시작 */}
+                                    <>
+                                        <textarea value={editCommentContent}
+                                        onChange={(e) => setEditCommentContent(e.target.value)} />
 
-                                    <div className="comment-content">
-                                        {c.content}
-                                    </div>
+                                        <button className="comment-save" onClick={handleCommentUpdate(c.id)}>저장</button>
+                                        <button className="comment-cancel" onClick={() => setEditCommentId(null)} >취소</button>
+                                    </>    
+                                    // {/* 댓글 수정 섹션 끝 */}
+                                ) : (
+                                    // {/* 댓글 읽기 섹션 시작*/}
+                                    <>
+                                        <div className="comment-content">
+                                            {c.content}
+                                        </div>
+                                        <div className="button-group">
+                                            <button className="list-button" onClick={() => navigate("/board")}>목록</button>
 
-                                    <div className="button-group">
-                                        <button className="list-button" onClick={() => navigate("/board")}>목록</button>
 
-                                        {/* 로그인 한 유저 본인이 쓴 글만 삭제 수정 가능 */}
-                                        {isCommentAuthor && (
-                                            <>
-                                                <button className="edit-button" onClick={() => handleCommentUpdate(c)}>수정</button>
-                                                <button className="delete-button" onClick={handleDelete}>삭제</button>
-                                            </>
-                                        )}
-                                    </div>
-
+                                            {/* 로그인 한 유저 본인이 쓴 댓글만 삭제 수정 가능 */}
+                                            {isCommentAuthor && (
+                                                <>
+                                                    <button className="edit-button" onClick={() => handleCommentEdit(c)}>수정</button>
+                                                    <button className="delete-button" onClick={handleCommentDelete(c.id)}>삭제</button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                    // {/* 댓글 읽기 섹션 끝*/}
+                                    )
+                                }    
                                 </li>
                                 ))}
                             </ul>
+                            {/* 기존 댓글 리스트 끝 */}
                         </div>
                     {/* 댓글 영역 끝 */}
 
