@@ -96,7 +96,12 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     //댓글 쓰기 함수->원 게시글의 id를 파라미터로 제출
     const handleCommentSubmit = async (e) => { //백엔드에 댓글 저장 요청
-        e.preventDefault();       
+        e.preventDefault(); 
+        if(!user) {
+            alert("로그인 후 댓글을 작성해 주세요")
+            navigate("/login")
+            return;
+        }      
         if (!newComment.trim()) {
             alert("댓글 내용을 입력해주세요.");
             return;
@@ -130,11 +135,15 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
 
     //댓글 삭제 이벤트 함수
     const handleCommentDelete = async(commentId) => {
+        if(!window.confirm("정말 삭제하시겠습니까?")) { //확인->true, 취소->false
+            return;
+        }
         try {
             await api.delete(`/api/comments/${commentId}`)
             loadComments();
         } catch (err) {
             console.error(err);
+            alert("댓글 삭제 권한이 없거나 삭제할 수 없는 댓글입니다.")
         }
     }
 
@@ -164,7 +173,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
     if(!post) return <p sytle={{color:"blue"}}>해당 게시글이 존재하지 않습니다.</p>
 
     //로그인 상태이면서 로그인한 유저와 글을 쓴 유저가 같은때->참
-    const isAuthor = user && user === post.author.username;
+    const isAuthor = user && user === post?.author?.username;
 
     return (
         <div className="detail-container">
@@ -176,7 +185,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                     <textarea value={content}
                     onChange={(e) => setContent(e.target.value)} />
                     <div className="button-group">
-                        <button className="edit-button" onClick={handleUpdate}>저장</button>
+                        <button className="edit-button" onClick={() => handleUpdate}>저장</button>
                         <button className="delete-button" onClick={() => setEditing(false)}>취소</button>
                     </div>    
                 </div>
@@ -193,7 +202,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                     {isAuthor && (
                     <>    
                         <button className="edit-button" onClick={() => setEditing(true)}>수정</button>
-                        <button className="delete-button" onClick={handleDelete}>삭제</button>
+                        <button className="delete-button" onClick={() =>handleDelete}>삭제</button>
                     </>
                     )}
                 </div>
@@ -218,7 +227,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                             <li key={c.id} className="comment-item">
                                 <div className="comment-header">
                                     <span className="comment-author">
-                                        {c.author.username}
+                                        {c.author?.username}
                                     </span>
                                     <span className="comment-date">
                                         {formatDate(c.createDate)}
@@ -253,7 +262,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                                     
                                     <div className="button-group">
                                         {/* 로그인한 유저 본인이 쓴 댓글만 삭제 수정 가능 */}
-                                        {user === c.author.username && (
+                                        {user === c.author?.username && (
                                         <>    
                                             <button className="edit-button" 
                                                 onClick={() => handleCommentEdit(c)}>
