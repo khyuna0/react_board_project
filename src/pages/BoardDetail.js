@@ -226,12 +226,15 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                         {comments.map((c)=>(
                             <li key={c.id} className="comment-item">
                                 <div className="comment-header">
-                                    <span className="comment-author">
-                                        {c.author?.username}
-                                    </span>
-                                    <span className="comment-date">
-                                        {formatDate(c.createDate)}
-                                    </span>
+                                    <div className="comment-content">
+                                        {c.content}
+                                    </div>
+                                    <div className="comment-author">
+                                        작성자 : {c.author?.username}
+                                    </div>
+                                    <div className="comment-date">
+                                        등록일 : {formatDate(c.createDate)}
+                                    </div>
                                 </div>
 
                             {editingCommentId === c.id ? (
@@ -255,11 +258,7 @@ function BoardDetail({ user }) { //props user->현재 로그인한 사용자의 
                             ) : (
 
                                 /* 댓글 읽기 섹션 시작! */
-                                <>
-                                    <div className="comment-content">
-                                        {c.content}
-                                    </div>
-                                    
+                                <>  
                                     <div className="button-group">
                                         {/* 로그인한 유저 본인이 쓴 댓글만 삭제 수정 가능 */}
                                         {user === c.author?.username && (
