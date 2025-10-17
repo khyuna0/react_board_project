@@ -7,24 +7,6 @@ function CommentList({ post, loadComments, user, comments }) {
   // const [comments, setComments] = useState([]); //백엔드에서 가져온 기존 댓글 배열
   const [editingCommentContent, setEditingCommentContent] = useState("");
   const [editingCommentId, setEditingCommentId] = useState(null);
-  // const [commentErrors, setCommentErrors] = useState({});
-  // const navigate = useNavigate();
-
-  useEffect(() => {
-    loadComments();
-  }, [post.id]);
-
-  // //댓글 리스트 불러오기 함수
-  // const loadComments = async () => {
-  //   try {
-  //     const res = await api.get(`/api/comments/${id}`);
-  //     //res->댓글 리스트 저장(ex:7번글에 달린 댓글 4개 리스트)
-  //     setComments(res.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("댓글 리스트 불러오기 실패!");
-  //   }
-  // };
 
   //댓글 삭제 이벤트 함수
   const handleCommentDelete = async (commentId) => {
@@ -62,7 +44,10 @@ function CommentList({ post, loadComments, user, comments }) {
     setEditingCommentContent(comment.content);
   };
 
-  //댓글 관련 이벤트 처리 끝!
+  //날짜 format 함수 -> 날짜와 시간 출력
+  const commentFormatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
+  };
 
   return (
     //   {/* 댓글 영역 시작! */}
