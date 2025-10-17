@@ -38,6 +38,11 @@ function CommentForm({ post, boardId, user }) {
     }
   };
 
+  //날짜 format 함수 -> 날짜와 시간 출력 (댓글용)
+  const commentFormatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+  
   return (
     // {/* 댓글 입력 폼 시작! */}
     <div>

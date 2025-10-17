@@ -1,39 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 
-function CommentList({ post, loadComments, user }) {
+function CommentList({ post, loadComments, user, comments }) {
   //댓글 관련 이벤트 처리 시작!
-  const [newComment, setNewComment] = useState(""); //새로운 댓글 저장 변수
-  const [comments, setComments] = useState([]); //백엔드에서 가져온 기존 댓글 배열
-  const [commentErrors, setCommentErrors] = useState({});
+  // const [comments, setComments] = useState([]); //백엔드에서 가져온 기존 댓글 배열
   const [editingCommentContent, setEditingCommentContent] = useState("");
   const [editingCommentId, setEditingCommentId] = useState(null);
-
-  const navigate = useNavigate();
+  // const [commentErrors, setCommentErrors] = useState({});
+  // const navigate = useNavigate();
 
   useEffect(() => {
     loadComments();
   }, [post.id]);
 
-  //댓글 리스트 불러오기 함수
-  const loadComments = async () => {
-    try {
-      const res = await api.get(`/api/comments/${id}`);
-      //res->댓글 리스트 저장(ex:7번글에 달린 댓글 4개 리스트)
-      setComments(res.data);
-    } catch (err) {
-      console.error(err);
-      alert("댓글 리스트 불러오기 실패!");
-    }
-  };
+  // //댓글 리스트 불러오기 함수
+  // const loadComments = async () => {
+  //   try {
+  //     const res = await api.get(`/api/comments/${id}`);
+  //     //res->댓글 리스트 저장(ex:7번글에 달린 댓글 4개 리스트)
+  //     setComments(res.data);
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("댓글 리스트 불러오기 실패!");
+  //   }
+  // };
 
-  //날짜 format 함수 -> 날짜와 시간 출력
-  const formatDate = (dateString) => {
-    return dateString.substring(0, 10);
-  };
-
-  
   //댓글 삭제 이벤트 함수
   const handleCommentDelete = async (commentId) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) {
@@ -57,9 +49,10 @@ function CommentList({ post, loadComments, user }) {
       });
       setEditingCommentId(null);
       setEditingCommentContent("");
-      loadComments();
+      loadComments(); // 댓글 리스트 갱신
     } catch (err) {
       console.error(err);
+      alert("댓글 수정 실패");
     }
   };
 
@@ -85,7 +78,7 @@ function CommentList({ post, loadComments, user }) {
               </div>
               <div className="comment-content">{c.content}</div>
               <div className="comment-date">
-                등록일 : {formatDate(c.createDate)}
+                등록일 : {commentFormatDate(c.createDate)}
               </div>
             </div>
 
@@ -138,9 +131,7 @@ function CommentList({ post, loadComments, user }) {
           </li>
         ))}
       </ul>
-      {/* 기존 댓글 리스트 끝! */}
     </div>
-    //   {/* 댓글 영역 끝! */}
   );
 }
 
