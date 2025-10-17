@@ -36,7 +36,7 @@ function PostEdit({ post, setEditing, setPost }) {
       />
       <textarea value={content} onChange={(e) => setContent(e.target.value)} />
       <div className="button-group">
-        <button className="edit-button" onClick={() => handleUpdate}>
+        <button className="edit-button" onClick={handleUpdate}>
           저장
         </button>
         <button className="delete-button" onClick={() => setEditing(false)}>
