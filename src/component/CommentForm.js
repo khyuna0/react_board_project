@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CommentForm({ post, user }) {
+function CommentForm({ post, boardId, user }) {
   const [newComment, setNewComment] = useState(""); //새로운 댓글 저장 변수
   const [commentErrors, setCommentErrors] = useState({});
 
@@ -21,7 +21,7 @@ function CommentForm({ post, user }) {
       return;
     }
     try {
-      await api.post(`/api/comments/${post.id}`, { content: newComment });
+      await api.post(`/api/comments/${boardId}`, { content: newComment });
       setNewComment("");
       if (!window.confirm("댓글을 입력하시겠습니까?")) {
         return;

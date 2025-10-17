@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axiosConfig";
 
 function PostView({ user, post, setEditing }) {
+  // post -> 상세보기 페이지에서 보여줄 글
   //  글 보기 컴포넌트
 
   const navigate = useNavigate();
