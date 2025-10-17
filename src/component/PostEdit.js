@@ -7,6 +7,11 @@ function PostEdit({ post, setEditing, setPost }) {
   const [content, setContent] = useState(post.content);
 
   const handleUpdate = async () => {
+    if (!content.trim() || !title.trim()) {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+
     if (!window.confirm("정말 수정하시겠습니까?")) {
       //확인->true, 취소->false
       return;

@@ -8,6 +8,7 @@ function CommentForm({ user, boardId, loadComments }) {
   const navigate = useNavigate();
 
   //댓글 쓰기 함수->원 게시글의 id를 파라미터로 제출
+
   const handleCommentSubmit = async (e) => {
     //백엔드에 댓글 저장 요청
     e.preventDefault();
