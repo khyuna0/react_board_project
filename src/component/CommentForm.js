@@ -14,7 +14,7 @@ function CommentForm({ user, boardId, loadComments }) {
     e.preventDefault();
     setCommentErrors({});
     if (!user) {
-      alert("로그인 한 후 댓글을 작성해 주세요.");
+      alert("로그인 후 댓글을 작성해 주세요.");
       navigate("/login");
       return;
     }
