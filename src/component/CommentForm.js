@@ -1,10 +1,12 @@
 import { useState } from "react";
 import api from "../api/axiosConfig";
+import { useNavigate } from "react-router-dom";
 
 function CommentForm({ user, boardId, loadComments }) {
   const [newComment, setNewComment] = useState("");
   const [commentErrors, setCommentErrors] = useState({});
-  
+  const navigate = useNavigate();
+
   //댓글 쓰기 함수->원 게시글의 id를 파라미터로 제출
   const handleCommentSubmit = async (e) => {
     //백엔드에 댓글 저장 요청
@@ -12,6 +14,7 @@ function CommentForm({ user, boardId, loadComments }) {
     setCommentErrors({});
     if (!user) {
       alert("로그인 한 후 댓글을 작성해 주세요.");
+      navigate("/login");
       return;
     }
     if (!newComment.trim()) {
